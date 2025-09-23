@@ -1,6 +1,6 @@
 {
 	"name": "timeline",
-	"version": "1.3",
+	"version": "1.4.0",
 	"description": "🎞️ Save the timeline browse history of your X (Twitter).",
 	"main": "background.js",
 	"type": "module",
