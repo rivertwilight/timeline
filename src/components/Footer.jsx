@@ -9,16 +9,9 @@ const Footer = () => (
 			reached.
 		</p>
 		<div className="mt-8 flex flex-col justify-center items-center">
-			<div className="border-slate-400 rounded-full">
-				<img
-					height={56}
-					width={56}
-					src={chrome.runtime.getURL("icon/ygeeker.png")}
-				></img>
-			</div>
-			<span className="mt-2 text-sm text-slate-400">A Work From</span>
+			<span className="text-sm text-slate-400">Made by</span>
 			<div className="text-lg">
-				<a href="https://www.ygeeker.com">YGeeker</a>
+				<a href="https://github.com/RiverTwilight">Rene Wang</a>
 			</div>
 			<div className="flex mt-2 mb-4 text-slate-500 space-x-1">
 				<a
