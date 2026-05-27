@@ -11583,19 +11583,38 @@ const EmptyHint = () => k$1("div", {
 }, "Take a look at x.com and check back later"));
 
 // @ts-nocheck
+function renderTextWithLinks(text) {
+  if (!text) return text;
+  const urlRegex = /(https?:\/\/\S+)/g;
+  return text.split(urlRegex).map((part, i) => {
+    if (part.startsWith("http")) {
+      return k$1("a", {
+        key: i,
+        href: part,
+        target: "_blank",
+        rel: "noreferrer",
+        onClick: e => e.stopPropagation(),
+        class: "text-blue-500 hover:underline pointer-events-auto"
+      }, part);
+    }
+    return part;
+  });
+}
 function Tweet({
   tweet
 }) {
   return k$1("div", {
-    class: `${tweet.engaged ? "border-blue-400 border-2 group is-engaged" : "border border-gray-200"} mb-4 rounded-xl relative group/item overflow-hidden break-inside-avoid ${tweet.bookmarked ? "is-bookmarked" : ""}`
+    class: `${tweet.engaged ? "border-blue-400 border-2 group is-engaged" : "border border-gray-200"} mb-4 rounded-xl relative group/item overflow-hidden break-inside-avoid bg-white hover:bg-gray-50 cursor-pointer ${tweet.bookmarked ? "is-bookmarked" : ""}`
   }, k$1("span", {
-    className: "bg-blue-400 hidden group-[.is-engaged]:block h-5 text-white text-xs leading-5 px-2 absolute rounded-bl-sm rounded-t-none right-0 top-0"
+    className: "bg-blue-400 hidden group-[.is-engaged]:block h-5 text-white text-xs leading-5 px-2 absolute rounded-bl-sm rounded-t-none right-0 top-0 z-10"
   }, "Engaged"), k$1("a", {
     target: "_blank",
-    class: "block",
+    rel: "noreferrer",
+    class: "absolute inset-0",
+    "aria-label": `Open tweet by ${tweet.userName}`,
     href: tweet.tweetUrl
-  }, k$1("div", {
-    class: "bg-white hover:bg-gray-50 cursor-pointer p-4"
+  }), k$1("div", {
+    class: "relative p-4 pointer-events-none"
   }, k$1("div", {
     class: "flex justify-between"
   }, k$1("span", {
@@ -11603,13 +11622,13 @@ function Tweet({
   }, tweet.userName), k$1("span", {
     class: "text-gray-500"
   }, formatDate(tweet.tweetTime))), k$1("p", {
-    class: "text-gray-700 mt-1 w-full text-base"
-  }, tweet.tweetBody), k$1("div", {
+    class: "text-gray-700 mt-1 w-full text-base whitespace-pre-wrap break-words"
+  }, renderTextWithLinks(tweet.tweetBody)), k$1("div", {
     class: "flex overflow-x-auto mt-2 gap-1"
   }, tweet.tweetImages.length > 0 && tweet.tweetImages.map(img => k$1("img", {
     class: "rounded-lg object-cover h-32 w-32",
     src: img
-  }))))), k$1("div", {
+  })))), k$1("div", {
     class: "absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover/item:opacity-100 transition-opacity duration-200 pointer-events-none group-hover/item:pointer-events-auto"
   }, k$1("button", {
     onClick: () => toggleBookmark(tweet.tweetUrl),
@@ -11756,8 +11775,8 @@ function CornerLogo() {
   return k$1("div", {
     class: "fixed left-3 top-3 z-20 flex items-center gap-2 backdrop-blur px-2 py-1 rounded-md"
   }, k$1("img", {
-    height: "20",
-    width: "20",
+    height: "28",
+    width: "28",
     src: "./icon/icon-48.png",
     alt: "Timeline"
   }));
@@ -11878,14 +11897,32 @@ function App() {
   }, k$1(EllipsisVertical, {
     size: 20,
     strokeWidth: 2
-  })), menuOpen && k$1("div", {
-    class: "absolute right-0 mt-1 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-30 py-1"
+  })), k$1(AnimatePresence, null, menuOpen && k$1(motion.div, {
+    initial: {
+      opacity: 0,
+      scale: 0.95,
+      y: -4
+    },
+    animate: {
+      opacity: 1,
+      scale: 1,
+      y: 0
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      y: -4
+    },
+    transition: {
+      duration: 0.15
+    },
+    class: "absolute right-0 mt-1 w-64 bg-white border border-gray-200 rounded-xl shadow-lg z-30 p-1 origin-top-right"
   }, k$1("a", {
     onClick: () => {
       exportTweets(tweet);
       setMenuOpen(false);
     },
-    class: "flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+    class: "flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer rounded-lg"
   }, k$1("span", null, "Export"), k$1(Download, {
     size: 14,
     class: "text-gray-400"
@@ -11894,7 +11931,7 @@ function App() {
     target: "_blank",
     rel: "noreferrer",
     onClick: () => setMenuOpen(false),
-    class: "flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+    class: "flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer rounded-lg"
   }, k$1("span", null, "GitHub"), k$1(ExternalLink, {
     size: 14,
     class: "text-gray-400"
@@ -11903,14 +11940,14 @@ function App() {
       clearTweets(activeTab == "History" ? ["tweets"] : ["bookmarkedTweets"]);
       setMenuOpen(false);
     },
-    class: "flex items-center justify-between px-3 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
+    class: "flex items-center justify-between px-3 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer rounded-lg"
   }, k$1("span", null, "Clear ", activeTab), k$1(Trash2, {
     size: 14
   })), k$1("div", {
-    class: "border-t border-gray-200 my-1"
+    class: "border-t border-gray-200 my-1 mx-2"
   }), k$1("p", {
     class: "px-3 py-2 text-xs text-gray-500 leading-relaxed"
-  }, tweet.length, "/100 posts saved. Chrome limits the storage available to extensions, so the oldest tweet is automatically replaced once the limit is reached.")))), searchTerm.length == 0 && k$1("section", null, k$1(AnimatePresence, {
+  }, tweet.length, "/100 posts saved. Chrome limits the storage available to extensions, so the oldest tweet is automatically replaced once the limit is reached."))))), searchTerm.length == 0 && k$1("section", null, k$1(AnimatePresence, {
     mode: "wait"
   }, k$1(motion.div, {
     key: activeTab,

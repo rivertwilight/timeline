@@ -14,6 +14,28 @@ import {
 import Footer from "../../components/Footer";
 import EmptyHint from "../../components/EmptyHint";
 
+function renderTextWithLinks(text) {
+	if (!text) return text;
+	const urlRegex = /(https?:\/\/\S+)/g;
+	return text.split(urlRegex).map((part, i) => {
+		if (part.startsWith("http")) {
+			return (
+				<a
+					key={i}
+					href={part}
+					target="_blank"
+					rel="noreferrer"
+					onClick={(e) => e.stopPropagation()}
+					class="text-blue-500 hover:underline pointer-events-auto"
+				>
+					{part}
+				</a>
+			);
+		}
+		return part;
+	});
+}
+
 function Tweet({ tweet }) {
 	return (
 		<div
@@ -21,35 +43,40 @@ function Tweet({ tweet }) {
 				tweet.engaged
 					? "border-blue-400 border-2 group is-engaged"
 					: "border border-gray-200"
-			} mb-4 rounded-xl relative group/item overflow-hidden break-inside-avoid ${
+			} mb-4 rounded-xl relative group/item overflow-hidden break-inside-avoid bg-white hover:bg-gray-50 cursor-pointer ${
 				tweet.bookmarked ? "is-bookmarked" : ""
 			}`}
 		>
-			<span className="bg-blue-400 hidden group-[.is-engaged]:block h-5 text-white text-xs leading-5 px-2 absolute rounded-bl-sm rounded-t-none right-0 top-0">
+			<span className="bg-blue-400 hidden group-[.is-engaged]:block h-5 text-white text-xs leading-5 px-2 absolute rounded-bl-sm rounded-t-none right-0 top-0 z-10">
 				Engaged
 			</span>
-			<a target="_blank" class="block" href={tweet.tweetUrl}>
-				<div class="bg-white hover:bg-gray-50 cursor-pointer p-4">
-					<div class="flex justify-between">
-						<span class="name">{tweet.userName}</span>
-						<span class="text-gray-500">
-							{formatDate(tweet.tweetTime)}
-						</span>
-					</div>
-					<p class="text-gray-700 mt-1 w-full text-base">
-						{tweet.tweetBody}
-					</p>
-					<div class="flex overflow-x-auto mt-2 gap-1">
-						{tweet.tweetImages.length > 0 &&
-							tweet.tweetImages.map((img) => (
-								<img
-									class="rounded-lg object-cover h-32 w-32"
-									src={img}
-								/>
-							))}
-					</div>
+			<a
+				target="_blank"
+				rel="noreferrer"
+				class="absolute inset-0"
+				aria-label={`Open tweet by ${tweet.userName}`}
+				href={tweet.tweetUrl}
+			/>
+			<div class="relative p-4 pointer-events-none">
+				<div class="flex justify-between">
+					<span class="name">{tweet.userName}</span>
+					<span class="text-gray-500">
+						{formatDate(tweet.tweetTime)}
+					</span>
 				</div>
-			</a>
+				<p class="text-gray-700 mt-1 w-full text-base whitespace-pre-wrap break-words">
+					{renderTextWithLinks(tweet.tweetBody)}
+				</p>
+				<div class="flex overflow-x-auto mt-2 gap-1">
+					{tweet.tweetImages.length > 0 &&
+						tweet.tweetImages.map((img) => (
+							<img
+								class="rounded-lg object-cover h-32 w-32"
+								src={img}
+							/>
+						))}
+				</div>
+			</div>
 			<div class="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover/item:opacity-100 transition-opacity duration-200 pointer-events-none group-hover/item:pointer-events-auto">
 				<button
 					onClick={() => toggleBookmark(tweet.tweetUrl)}
@@ -234,7 +261,7 @@ function exportTweets(tweets) {
 function CornerLogo() {
 	return (
 		<div class="fixed left-3 top-3 z-20 flex items-center gap-2 backdrop-blur px-2 py-1 rounded-md">
-			<img height="20" width="20" src="./icon/icon-48.png" alt="Timeline" />
+			<img height="28" width="28" src="./icon/icon-48.png" alt="Timeline" />
 		</div>
 	);
 }
@@ -385,58 +412,78 @@ function App() {
 							>
 								<MoreVertical size={20} strokeWidth={2} />
 							</button>
-							{menuOpen && (
-								<div class="absolute right-0 mt-1 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-30 py-1">
-									<a
-										onClick={() => {
-											exportTweets(tweet);
-											setMenuOpen(false);
+							<AnimatePresence>
+								{menuOpen && (
+									<motion.div
+										initial={{
+											opacity: 0,
+											scale: 0.95,
+											y: -4,
 										}}
-										class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-									>
-										<span>Export</span>
-										<Download
-											size={14}
-											class="text-gray-400"
-										/>
-									</a>
-									<a
-										href="https://github.com/RiverTwilight/Timeline"
-										target="_blank"
-										rel="noreferrer"
-										onClick={() => setMenuOpen(false)}
-										class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-									>
-										<span>GitHub</span>
-										<ExternalLink
-											size={14}
-											class="text-gray-400"
-										/>
-									</a>
-									<a
-										onClick={() => {
-											clearTweets(
-												activeTab == "History"
-													? ["tweets"]
-													: ["bookmarkedTweets"]
-											);
-											setMenuOpen(false);
+										animate={{
+											opacity: 1,
+											scale: 1,
+											y: 0,
 										}}
-										class="flex items-center justify-between px-3 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
+										exit={{
+											opacity: 0,
+											scale: 0.95,
+											y: -4,
+										}}
+										transition={{ duration: 0.15 }}
+										class="absolute right-0 mt-1 w-64 bg-white border border-gray-200 rounded-xl shadow-lg z-30 p-1 origin-top-right"
 									>
-										<span>Clear {activeTab}</span>
-										<Trash2 size={14} />
-									</a>
-									<div class="border-t border-gray-200 my-1" />
-									<p class="px-3 py-2 text-xs text-gray-500 leading-relaxed">
-										{tweet.length}/100 posts saved. Chrome
-										limits the storage available to
-										extensions, so the oldest tweet is
-										automatically replaced once the limit is
-										reached.
-									</p>
-								</div>
-							)}
+										<a
+											onClick={() => {
+												exportTweets(tweet);
+												setMenuOpen(false);
+											}}
+											class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer rounded-lg"
+										>
+											<span>Export</span>
+											<Download
+												size={14}
+												class="text-gray-400"
+											/>
+										</a>
+										<a
+											href="https://github.com/RiverTwilight/Timeline"
+											target="_blank"
+											rel="noreferrer"
+											onClick={() => setMenuOpen(false)}
+											class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer rounded-lg"
+										>
+											<span>GitHub</span>
+											<ExternalLink
+												size={14}
+												class="text-gray-400"
+											/>
+										</a>
+										<a
+											onClick={() => {
+												clearTweets(
+													activeTab == "History"
+														? ["tweets"]
+														: ["bookmarkedTweets"]
+												);
+												setMenuOpen(false);
+											}}
+											class="flex items-center justify-between px-3 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer rounded-lg"
+										>
+											<span>Clear {activeTab}</span>
+											<Trash2 size={14} />
+										</a>
+										<div class="border-t border-gray-200 my-1 mx-2" />
+										<p class="px-3 py-2 text-xs text-gray-500 leading-relaxed">
+											{tweet.length}/100 posts saved.
+											Chrome limits the storage available
+											to extensions, so the oldest tweet
+											is automatically replaced once the
+											limit is reached.
+										</p>
+									</motion.div>
+								)}
+							</AnimatePresence>
 						</div>
 					</nav>
 					{searchTerm.length == 0 && (
