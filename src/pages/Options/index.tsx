@@ -14,6 +14,29 @@ import {
 import Footer from "../../components/Footer";
 import EmptyHint from "../../components/EmptyHint";
 
+function Avatar({ url, name }) {
+	if (url) {
+		return (
+			<img
+				src={url}
+				alt=""
+				class="h-8 w-8 rounded-full object-cover flex-shrink-0 bg-gray-200"
+				loading="lazy"
+				onError={(e) => {
+					// Hide on failure so the parent fallback can show.
+					e.currentTarget.style.display = "none";
+				}}
+			/>
+		);
+	}
+	const letter = ((name || "?").trim().charAt(0) || "?").toUpperCase();
+	return (
+		<div class="h-8 w-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-medium flex-shrink-0">
+			{letter}
+		</div>
+	);
+}
+
 function renderTextWithLinks(text) {
 	if (!text) return text;
 	const urlRegex = /(https?:\/\/\S+)/g;
@@ -58,13 +81,29 @@ function Tweet({ tweet }) {
 				href={tweet.tweetUrl}
 			/>
 			<div class="relative p-4 pointer-events-none">
-				<div class="flex justify-between">
-					<span class="name">{tweet.userName}</span>
-					<span class="text-gray-500">
-						{formatDate(tweet.tweetTime)}
-					</span>
+				<div
+					class={`flex gap-3 ${
+						tweet.userHandle ? "items-start" : "items-center"
+					}`}
+				>
+					<Avatar url={tweet.avatarUrl} name={tweet.userName} />
+					<div class="flex-1 min-w-0">
+						<div class="flex items-baseline justify-between gap-2">
+							<span class="font-semibold text-gray-900 truncate">
+								{tweet.userName}
+							</span>
+							<span class="text-gray-500 text-sm whitespace-nowrap flex-shrink-0">
+								{formatDate(tweet.tweetTime)}
+							</span>
+						</div>
+						{tweet.userHandle && (
+							<div class="text-gray-500 text-sm truncate">
+								{tweet.userHandle}
+							</div>
+						)}
+					</div>
 				</div>
-				<p class="text-gray-700 mt-1 w-full text-base whitespace-pre-wrap break-words">
+				<p class="text-gray-700 mt-2 w-full text-base whitespace-pre-wrap break-words">
 					{renderTextWithLinks(tweet.tweetBody)}
 				</p>
 				<div class="flex overflow-x-auto mt-2 gap-1">

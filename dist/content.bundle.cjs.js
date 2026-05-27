@@ -44,7 +44,25 @@ function processTweets() {
         } else {
           tweetUrl = _root + tweetUrlElem.getAttribute("href");
         }
-        let userName = userNameElem.textContent;
+
+        // Display name: text of the first <a> link inside User-Name
+        // (avoids picking up the @handle and the relative time).
+        const nameLink = userNameElem.querySelector("a[role='link']");
+        const userName = (nameLink ? nameLink.textContent : userNameElem.textContent).trim();
+
+        // Handle: find the span starting with "@".
+        let userHandle = "";
+        const handleSpan = Array.from(userNameElem.querySelectorAll("span")).find(s => s.textContent.trim().startsWith("@"));
+        if (handleSpan) {
+          userHandle = handleSpan.textContent.trim();
+        }
+
+        // Avatar URL: <img> inside the avatar container.
+        let avatarUrl = "";
+        const avatarImg = tweet.querySelector("[data-testid='Tweet-User-Avatar'] img, [data-testid^='UserAvatar-Container-'] img");
+        if (avatarImg) {
+          avatarUrl = avatarImg.getAttribute("src") || "";
+        }
         let tweetBody = tweetBodyElem ? tweetBodyElem.textContent : "";
         if (!!showMoreLink) {
           tweetBody = tweetBody.slice(0, -9);
@@ -53,7 +71,7 @@ function processTweets() {
         let tweetTime = tweetTimeElem.getAttribute("datetime");
         let tweetImages = Array.from(tweetImgElems).map(ele => ele.getAttribute("src"));
         console.log("save tweet", tweetBodyElem.textContent);
-        saveTweet(userName, tweetBody, userId, tweetUrl, tweetTime, tweetImages, engaged);
+        saveTweet(userName, userHandle, avatarUrl, tweetBody, userId, tweetUrl, tweetTime, tweetImages, engaged);
       }
     }
   });
@@ -64,11 +82,13 @@ function isElementInViewport(el) {
   return rectHeight > document.documentElement.clientHeight || rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
 }
 let tweetsToSave = [];
-function saveTweet(userName, tweetBody, userId, tweetUrl, tweetTime, tweetImages, engaged) {
+function saveTweet(userName, userHandle, avatarUrl, tweetBody, userId, tweetUrl, tweetTime, tweetImages, engaged) {
   const existingIndex = tweetsToSave.findIndex(tweet => tweet.tweetUrl === tweetUrl);
   if (existingIndex === -1) {
     tweetsToSave.push({
       userName: userName,
+      userHandle: userHandle,
+      avatarUrl: avatarUrl,
       tweetBody: tweetBody,
       userId: userId,
       tweetUrl: tweetUrl,

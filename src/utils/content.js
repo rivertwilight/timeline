@@ -54,7 +54,30 @@ function processTweets() {
 					tweetUrl = _root + tweetUrlElem.getAttribute("href");
 				}
 
-				let userName = userNameElem.textContent;
+				// Display name: text of the first <a> link inside User-Name
+				// (avoids picking up the @handle and the relative time).
+				const nameLink = userNameElem.querySelector("a[role='link']");
+				const userName = (
+					nameLink ? nameLink.textContent : userNameElem.textContent
+				).trim();
+
+				// Handle: find the span starting with "@".
+				let userHandle = "";
+				const handleSpan = Array.from(
+					userNameElem.querySelectorAll("span")
+				).find((s) => s.textContent.trim().startsWith("@"));
+				if (handleSpan) {
+					userHandle = handleSpan.textContent.trim();
+				}
+
+				// Avatar URL: <img> inside the avatar container.
+				let avatarUrl = "";
+				const avatarImg = tweet.querySelector(
+					"[data-testid='Tweet-User-Avatar'] img, [data-testid^='UserAvatar-Container-'] img"
+				);
+				if (avatarImg) {
+					avatarUrl = avatarImg.getAttribute("src") || "";
+				}
 
 				let tweetBody = tweetBodyElem ? tweetBodyElem.textContent : "";
 
@@ -72,6 +95,8 @@ function processTweets() {
 
 				saveTweet(
 					userName,
+					userHandle,
+					avatarUrl,
 					tweetBody,
 					userId,
 					tweetUrl,
@@ -103,6 +128,8 @@ let tweetsToSave = [];
 
 function saveTweet(
 	userName,
+	userHandle,
+	avatarUrl,
 	tweetBody,
 	userId,
 	tweetUrl,
@@ -117,6 +144,8 @@ function saveTweet(
 	if (existingIndex === -1) {
 		tweetsToSave.push({
 			userName: userName,
+			userHandle: userHandle,
+			avatarUrl: avatarUrl,
 			tweetBody: tweetBody,
 			userId: userId,
 			tweetUrl: tweetUrl,

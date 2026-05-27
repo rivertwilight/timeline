@@ -5,10 +5,10 @@ const rawConfig = {
 	manifest_version: 3,
 	version: "1.4",
 	icons: {
-		16: "./icon/icon-16.png",
-		48: "./icon/icon-48.png",
-		96: "./icon/icon-96.png",
-		128: "./icon/icon-128.png",
+		16: "icon/icon-16.png",
+		48: "icon/icon-48.png",
+		96: "icon/icon-96.png",
+		128: "icon/icon-128.png",
 	},
 	options_page: "options.html",
 	permissions: ["storage"],
@@ -30,8 +30,8 @@ const rawConfig = {
 	],
 	action: {
 		default_icon: {
-			16: "./icon/icon-16.png",
-			48: "./icon/icon-48.png",
+			16: "icon/icon-16.png",
+			48: "icon/icon-48.png",
 		},
 	},
 };

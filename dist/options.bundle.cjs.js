@@ -11583,6 +11583,27 @@ const EmptyHint = () => k$1("div", {
 }, "Take a look at x.com and check back later"));
 
 // @ts-nocheck
+function Avatar({
+  url,
+  name
+}) {
+  if (url) {
+    return k$1("img", {
+      src: url,
+      alt: "",
+      class: "h-8 w-8 rounded-full object-cover flex-shrink-0 bg-gray-200",
+      loading: "lazy",
+      onError: e => {
+        // Hide on failure so the parent fallback can show.
+        e.currentTarget.style.display = "none";
+      }
+    });
+  }
+  const letter = ((name || "?").trim().charAt(0) || "?").toUpperCase();
+  return k$1("div", {
+    class: "h-8 w-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-medium flex-shrink-0"
+  }, letter);
+}
 function renderTextWithLinks(text) {
   if (!text) return text;
   const urlRegex = /(https?:\/\/\S+)/g;
@@ -11616,13 +11637,22 @@ function Tweet({
   }), k$1("div", {
     class: "relative p-4 pointer-events-none"
   }, k$1("div", {
-    class: "flex justify-between"
+    class: `flex gap-3 ${tweet.userHandle ? "items-start" : "items-center"}`
+  }, k$1(Avatar, {
+    url: tweet.avatarUrl,
+    name: tweet.userName
+  }), k$1("div", {
+    class: "flex-1 min-w-0"
+  }, k$1("div", {
+    class: "flex items-baseline justify-between gap-2"
   }, k$1("span", {
-    class: "name"
+    class: "font-semibold text-gray-900 truncate"
   }, tweet.userName), k$1("span", {
-    class: "text-gray-500"
-  }, formatDate(tweet.tweetTime))), k$1("p", {
-    class: "text-gray-700 mt-1 w-full text-base whitespace-pre-wrap break-words"
+    class: "text-gray-500 text-sm whitespace-nowrap flex-shrink-0"
+  }, formatDate(tweet.tweetTime))), tweet.userHandle && k$1("div", {
+    class: "text-gray-500 text-sm truncate"
+  }, tweet.userHandle))), k$1("p", {
+    class: "text-gray-700 mt-2 w-full text-base whitespace-pre-wrap break-words"
   }, renderTextWithLinks(tweet.tweetBody)), k$1("div", {
     class: "flex overflow-x-auto mt-2 gap-1"
   }, tweet.tweetImages.length > 0 && tweet.tweetImages.map(img => k$1("img", {
