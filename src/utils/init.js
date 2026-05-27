@@ -3,7 +3,7 @@ import fs from "fs";
 const rawConfig = {
 	name: "Timeline - Your X (Twitter) History",
 	manifest_version: 3,
-	version: "1.5",
+	version: "1.4",
 	icons: {
 		16: "./icon/icon-16.png",
 		48: "./icon/icon-48.png",

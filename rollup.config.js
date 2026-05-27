@@ -1,6 +1,6 @@
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-// import typescript from "@rollup/plugin-typescript";
+import typescript from "@rollup/plugin-typescript";
 import { babel } from "@rollup/plugin-babel";
 import alias from "@rollup/plugin-alias";
 
@@ -23,6 +23,12 @@ const plugins = [
 	}),
 	nodeResolve({ extensions }),
 	commonjs(),
+	typescript({
+		tsconfig: "./tsconfig.json",
+		include: ["src/**/*.ts", "src/**/*.tsx"],
+		outDir: "./dist",
+		noEmitOnError: false,
+	}),
 	babel({
 		babelHelpers: "bundled",
 		extensions,

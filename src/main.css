@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+	overflow-y: scroll;
+	scrollbar-gutter: stable;
+}
+
+body {
+	width: 100vw;
+	overflow-x: hidden;
+}
+
 .active {
 	background-color: black;
 	color: white;

@@ -1,5 +1,4 @@
-import { h, Component, render, Fragment } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { h } from "preact";
 
 const EmptyHint = () => (
 	<div class="bg-white p-4 rounded-xl flex flex-col justify-center h-56">

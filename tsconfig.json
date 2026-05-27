@@ -1,18 +1,19 @@
 {
 	"compilerOptions": {
-		"target": "es5",
+		"target": "es2020",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
 		"skipLibCheck": true,
-		"module": "commonjs",
+		"module": "esnext",
+		"moduleResolution": "node",
 		"strict": false,
 		"noImplicitAny": false,
 		"forceConsistentCasingInFileNames": true,
-		"noEmit": true,
+		"noEmit": false,
 		"esModuleInterop": true,
-		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
 		"jsx": "preserve",
 		"incremental": true,
 		"baseUrl": ".",
@@ -25,6 +26,6 @@
 		},
 		"experimentalDecorators": true
 	},
-	"exclude": ["node_modules"],
-	"include": ["**/*.ts", "**/*.tsx", "types/index.d,ts"]
+	"exclude": ["node_modules", "dist"],
+	"include": ["src/**/*"]
 }

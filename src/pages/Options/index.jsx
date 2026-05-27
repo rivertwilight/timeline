@@ -1,5 +1,5 @@
 import { h, Component, render } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useRef } from "preact/hooks";
 import Footer from "../../components/Footer";
 import EmptyHint from "../../components/EmptyHint";
 
@@ -7,8 +7,10 @@ function Tweet({ tweet }) {
 	return (
 		<div
 			class={`${
-				tweet.engaged ? "border-blue-400 border-2 group is-engaged" : ""
-			} my-4 rounded-xl shadow relative group/item flex overflow-hidden ${
+				tweet.engaged
+					? "border-blue-400 border-2 group is-engaged"
+					: "border border-gray-200"
+			} mb-4 rounded-xl relative group/item flex overflow-hidden break-inside-avoid ${
 				tweet.bookmarked ? "is-bookmarked" : ""
 			}`}
 		>
@@ -253,26 +255,6 @@ function CornerLogo() {
 				width="20"
 						src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAQAAAD/5HvMAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfnCAEEAgfkAvLDAAAF6klEQVRo3u2Za2wUVRTHf7vtstutCN0CLUJTeaiASKUQCDSUkogaBDQl+IVEwSqh+NZqkPBBQHkEDcRPBqQEEhoSEx5CyiMKaFQKCGik4VGQh33QBy3Qx7Zsd68fvF1mZmd2Z3YX+LL/+2Vm7p0z/3vm3HPuPQcSSCCBBB4ubHGS4iAZO4JufAQeFiEbfRjCSAaRRQa9cRCgg5tUU0sVF6mn+8ER6ksu+RQwgnSSQ3oFrVyjgsNUcD02jZnBQOZziFsEEBFaF2dZSY4O5bhpqA+zWcxYnMEnflppxks7Puy4SeFR0hT9AWooYzOXEPEmZCeXpbxIirz3cpXjHKOSOjrpwo+NXjhJ4wnGk8co0qT8AOf4iu9pj+ePSuEt/gn+jCZ2MIdsHIYT9ZDHKs7TLd9oYyPZ8aPjYR2tUvQdtpGP25ROh7OES9LaAhxhfHzoZFLKXSm0gjmmyNwjlUMp7XIyf1EQO53+bMGPQOBlE8OikJDKIq5JSpVMiY3OI3wj7eAWy+gdpRQbz/OnpHSKMdHTSeIjvAgELbxPr5imNpE/JKVyBkYrZDo1co18ariizGMylQgE3ayJbnKZHJECNgS9T2yYxQ0EgmZmWX/ZxlJpPQfJjAsdSOITuhAIjliXOYILCAS1TDMxOoPXyMUecVw6exEI7vK2NTp2vpQmuIakCGMdvMCPdHGZEtIjSi6gHoHgBIOsEBrKOQSC84yMMHIIX9MQjO/7eS5CdHeyUeqoyAqhIumbV4Qd5WYeJ6Xb7Gk3WMPjYd+aJE17N6lm6aSyRwqfaDjGxrNsCUY4ZfNTwathAoybXQgE9UwwS2g0/yIQ7DQUm867VIXZnN1hE88Ybm/ekPovMUtoLp0I/CzW7XVQwD65fI1bgAsU49GV8JTcymw3625Xy3ChFwizWCltIHLr5AfydIw8lQMIBGfMeSMXu2VkHhzSU0hFcNNlrtWyXCd2rUcgaGCcGUIDOCWDoNaChvG3wWe9NNOqWW/39LQg5BuLCCDo5BX1Y32P0Zs0AGro1PRcZTd26pim8sld7GEHN3AzhTc17u4CNSRxOOQb1XThwkGGGQ3lSBtZpdPXn+EsVh2BfKylj+y18xLXVdrZTzZP6qy2ybQgECwx1pCbAdgBP0PkMcZFtgwbzdySoxppZLpKxnE2cFteByjnOz5XELDRSIfOxDrxAWh3EUpCT/MtHgKAk0cBeJ2XARs+llNmqM+D1CnuBOW8Q38zP0IPSkJn+YkPVH7BgwcQlHHIUIKgXvOkmTYThFzySxorVZqml9WU6Zwv97GEJkPBtpDTVmbQosLBgwsI0GxMCFpYxgHNiz9TQnVY0TMYqrhLptDAO6sxGCfgC9FvCEZzUrFGTjNWZ0yxapUFKA06PicLaFKtsgMG0dCCYyzgkhR2kXzdEcWazIePX/mQGcxjm1zMkQhZDB1zaUBQzUyD/mKdVIyfDhnBzRAyDK76nnoX6RSxnnIz7CXsls4leTJKnpHeKAKhbjazk5uGua9YM5NuZuEAGvhF22W0+/XREEagldyhX8eR5DAJgGNUarsiH1v0UEWL6bGVIQHayXwyAB9745XCSmEdHSZ2QgF+0zmzTA0egwaHiraQjlTAywpOMiHC+VxwjT1c1jz18DEDAB9bIzjcBwI7JXIvfjRux/OYMJO66JMNSmQxDVfMdHrSMX7WKhLHltGPhRyngfdiTlj1RMkYElYARbTxf0pvaQwpvenBlN5pcmKaGBlsDSY9N6q2GmaRykKu0pP0zI9CggaZbFGkhQstpoXHsDm+aWFQJ85vs5UppkKpnWH3J3EOkMJCrgR9cCM7KCQrTGkhjUms4pyitLDJTGnBWvFlHJ+pii9XOMExKqmlHT9+bCTTi36y+DISj/Xii9WNRF9mU0yuwgH4aaWJNu7iw44TFx5VeUpQw3ZKqcJUeSoaPMYCDnHbZAHvC8bezwLePU2NI5+pEUqcR/ndaokz9iLwKLLJVBWBa6nj/IMuAmulxK1MnkACCSTwsPEfF/n4ctIyymwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMDgtMDFUMDQ6MDI6MDQrMDA6MDCiLtkeAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTA4LTAxVDA0OjAyOjA0KzAwOjAw03NhogAAABJ0RVh0ZXhpZjpFeGlmT2Zmc2V0ADI2UxuiZQAAABl0RVh0ZXhpZjpQaXhlbFhEaW1lbnNpb24AMTAyNPLFVh8AAAAZdEVYdGV4aWY6UGl4ZWxZRGltZW5zaW9uADEwMjRLPo33AAAAIHRFWHRzb2Z0d2FyZQBodHRwczovL2ltYWdlbWFnaWNrLm9yZ7zPHZ0AAAAYdEVYdFRodW1iOjpEb2N1bWVudDo6UGFnZXMAMaf/uy8AAAAYdEVYdFRodW1iOjpJbWFnZTo6SGVpZ2h0ADE5MkBdcVUAAAAXdEVYdFRodW1iOjpJbWFnZTo6V2lkdGgAMTky06whCAAAABl0RVh0VGh1bWI6Ok1pbWV0eXBlAGltYWdlL3BuZz+yVk4AAAAXdEVYdFRodW1iOjpNVGltZQAxNjkwODYyNTI058q/fgAAAA90RVh0VGh1bWI6OlNpemUAMEJClKI+7AAAAFZ0RVh0VGh1bWI6OlVSSQBmaWxlOi8vL21udGxvZy9mYXZpY29ucy8yMDIzLTA4LTAxLzQ1NzYyZDZkY2Q2YmM2ZmE2MWMzNTYwOTNkZDNkNjA1Lmljby5wbmdCGETuAAAAAElFTkSuQmCC"
 				/>
-			<span class="font-semibold text-sm">Timeline</span>
-		</div>
-	);
-}
-
-function CornerActions({ tweets }) {
-	return (
-		<div class="fixed right-4 top-3 z-20 flex items-center gap-4 backdrop-blur px-2 py-1 rounded-md text-sm">
-			<a
-				onClick={() => exportTweets(tweets)}
-				class="text-gray-500 cursor-pointer hover:text-black"
-			>
-				Export
-			</a>
-			<a
-				href="https://github.com/RiverTwilight/Timeline"
-				class="text-gray-500 cursor-pointer hover:text-black"
-			>
-				GitHub
-			</a>
 		</div>
 	);
 }
@@ -284,6 +266,20 @@ function App() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchResults, setSearchResults] = useState([]);
 	const [activeTab, setActiveTab] = useState("History");
+	const [menuOpen, setMenuOpen] = useState(false);
+	const menuRef = useRef(null);
+
+	useEffect(() => {
+		if (!menuOpen) return;
+		const handleClick = (e) => {
+			if (menuRef.current && !menuRef.current.contains(e.target)) {
+				setMenuOpen(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClick);
+		return () =>
+			document.removeEventListener("mousedown", handleClick);
+	}, [menuOpen]);
 
 	const fetchTweets = () => {
 		chrome.storage.local.get(["tweets", "bookmarkedTweets"], (data) => {
@@ -342,46 +338,133 @@ function App() {
 	}, []);
 
 	return (
-		<div class="relative min-w-[500px] max-w-[800px]">
+		<div class="relative min-w-[800px] max-w-[1000px] mx-auto">
 			<CornerLogo />
-			<CornerActions tweets={tweet} />
-			<div class="relative container mx-auto flex">
-				<aside class="w-52 sticky pt-12 h-[90vh] px-2 left-0 bottom-0 top-0 overflow-hidden">
-					<nav>
+			<div class="relative flex">
+				<main class="flex-1 px-4 pt-14 rounded min-w-[700px] overflow-hidden w-full">
+					<nav class="flex items-center gap-2 mb-4">
 						{["History", "Favorite"].map((tab) => (
-							<a
+							<button
 								key={tab}
 								onClick={() => setActiveTab(tab)}
-								class={`text-lg text-center cursor-pointer font-semibold block mb-2 py-2 px-4 rounded-md transition-colors ${
+								class={`text-sm font-medium cursor-pointer rounded-full px-4 py-1.5 transition-colors ${
 									activeTab == tab
 										? "bg-black text-white hover:bg-gray-800"
-										: "text-gray-600 hover:bg-gray-200 hover:text-gray-900"
+										: "bg-gray-100 text-gray-700 hover:bg-gray-200"
 								}`}
 							>
 								{tab}
-							</a>
+							</button>
 						))}
-						{/* <a
-							onClick={() => setActiveTab("User")}
-							class={`${
-								activeTab == "User" ? "active" : ""
-							} text-lg text-gray-600 cursor-pointer font-semibold block mb-2 py-2 px-4 rounded-md hover:bg-gray-200`}
+						<div class="flex-1" />
+						<div class="relative flex items-center">
+							<svg
+								class="absolute left-3 pointer-events-none text-gray-400"
+								xmlns="http://www.w3.org/2000/svg"
+								height="16"
+								width="16"
+								viewBox="0 -960 960 960"
+								fill="currentColor"
+							>
+								<path d="M796-121 533-384q-30 26-69.959 40.5T378-329q-108.162 0-183.081-75Q120-479 120-585t75-181q75-75 181.5-75t181 75Q632-691 632-584.85 632-542 618-502q-14 40-42 75l264 262-44 44ZM377-389q81.25 0 138.125-57.5T572-585q0-81-56.875-138.5T377-781q-82.083 0-139.542 57.5Q180-666 180-585t57.458 138.5Q294.917-389 377-389Z" />
+							</svg>
+							<input
+								id="searchInput"
+								type="text"
+								value={searchTerm}
+								onInput={handleSearchChange}
+								placeholder="Search"
+								class="h-9 pl-9 pr-3 w-48 rounded-full text-sm bg-gray-50 border border-gray-200 focus:outline-none focus:border-gray-400"
+							/>
+						</div>
+						<button
+							onClick={fetchTweets}
+							title="Refresh"
+							aria-label="Refresh"
+							class="h-9 w-9 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 hover:text-black transition-colors cursor-pointer"
 						>
-							User
-						</a> */}
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="20"
+								width="20"
+								viewBox="0 -960 960 960"
+								fill="currentColor"
+							>
+								<path d="M480-160q-133 0-226.5-93.5T160-480q0-133 93.5-226.5T480-800q85 0 149 34.5T740-671v-99q0-13 8.5-21.5T770-800q13 0 21.5 8.5T800-770v194q0 13-8.5 21.5T770-546H576q-13 0-21.5-8.5T546-576q0-13 8.5-21.5T576-606h138q-38-60-97-97t-137-37q-109 0-184.5 75.5T220-480q0 109 75.5 184.5T480-220q75 0 140-39.5T717-366q5-11 16.5-16.5t22.5-.5q12 5 16 16.5t-1 23.5q-39 84-117.5 133.5T480-160Z" />
+							</svg>
+						</button>
+						<div class="relative" ref={menuRef}>
+							<button
+								onClick={() => setMenuOpen((o) => !o)}
+								title="More"
+								aria-label="More"
+								class="h-9 w-9 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 hover:text-black transition-colors cursor-pointer"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="20"
+									width="20"
+									viewBox="0 -960 960 960"
+									fill="currentColor"
+								>
+									<path d="M480-200q-33 0-56.5-23.5T400-280q0-33 23.5-56.5T480-360q33 0 56.5 23.5T560-280q0 33-23.5 56.5T480-200Zm0-200q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-200q-33 0-56.5-23.5T400-680q0-33 23.5-56.5T480-760q33 0 56.5 23.5T560-680q0 33-23.5 56.5T480-600Z" />
+								</svg>
+							</button>
+							{menuOpen && (
+								<div class="absolute right-0 mt-1 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-30 py-1">
+									<a
+										onClick={() => {
+											exportTweets(tweet);
+											setMenuOpen(false);
+										}}
+										class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+									>
+										Export
+									</a>
+									<a
+										href="https://github.com/RiverTwilight/Timeline"
+										target="_blank"
+										rel="noreferrer"
+										onClick={() => setMenuOpen(false)}
+										class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+									>
+										GitHub
+									</a>
+									<a
+										onClick={() => {
+											clearTweets(
+												activeTab == "History"
+													? ["tweets"]
+													: ["bookmarkedTweets"]
+											);
+											setMenuOpen(false);
+										}}
+										class="block px-3 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
+									>
+										Clear {activeTab}
+									</a>
+									<div class="border-t border-gray-200 my-1" />
+									<p class="px-3 py-2 text-xs text-gray-500 leading-relaxed">
+										{tweet.length}/100 posts saved. Chrome
+										limits the storage available to
+										extensions, so the oldest tweet is
+										automatically replaced once the limit is
+										reached.
+									</p>
+								</div>
+							)}
+						</div>
 					</nav>
-				</aside>
-				<main class="flex-1 px-4 rounded min-w-[550px] overflow-hidden w-full">
 					{searchTerm.length == 0 && (
 						<section>
 							{activeTab == "Favorite" ? (
-								<div>
+								<div class="columns-2 gap-4 pt-4">
 									{bookmarkedPost.map((t) => {
 										return <Tweet tweet={t} />;
 									})}
 								</div>
 							) : (
-								<div>
+								<div class="columns-2 gap-4 pt-4">
 									{tweet
 										.filter((t) => {
 											return (
@@ -402,14 +485,11 @@ function App() {
 								activeTab == "Favorite" && (
 									<EmptyHint key="bookmakred" />
 								)}
-							<p className="text-gray-500 py-2">
-								Total: {tweet.length}/100
-							</p>
 							<Footer />
 						</section>
 					)}
 					{searchTerm.length > 0 && (
-						<section>
+						<section class="columns-2 gap-4 pt-4">
 							{searchResults
 								.filter((t) => {
 									return (
@@ -425,86 +505,6 @@ function App() {
 					)}
 					<section style="display: none"></section>
 				</main>
-				<div class="w-48 sticky h-[90vh] flex flex-col right-0 bottom-0 top-12 mt-3 overflow-visible">
-					<div class="group w-full flex items-center relative">
-						<button
-							class="bg-white transition-all h-12 w-12 mt-2 bg-red shadow rounded-full flex justify-center items-center overflow-hidden group-hover:w-full group-hover:justify-start"
-							aria-label="Search"
-							title="Search"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24"
-								viewBox="0 -960 960 960"
-								class="group-hover:ml-3"
-								width="24"
-							>
-								<path d="M796-121 533-384q-30 26-69.959 40.5T378-329q-108.162 0-183.081-75Q120-479 120-585t75-181q75-75 181.5-75t181 75Q632-691 632-584.85 632-542 618-502q-14 40-42 75l264 262-44 44ZM377-389q81.25 0 138.125-57.5T572-585q0-81-56.875-138.5T377-781q-82.083 0-139.542 57.5Q180-666 180-585t57.458 138.5Q294.917-389 377-389Z" />
-							</svg>
-						</button>
-
-						<input
-							id="searchInput"
-							type="text"
-							value={searchTerm}
-							onInput={handleSearchChange}
-							placeholder="Search"
-							class="translate-y-[4px] translate-x-[-4px] p-0 rounded-md h-8 w-14 absolute left-12 opacity-0 group-hover:opacity-100"
-						/>
-					</div>
-					<div class="group w-full flex items-center relative">
-						<button
-							class="bg-white transition-all h-12 w-12 mt-2 bg-red shadow rounded-full flex justify-center items-center overflow-hidden group-hover:w-full group-hover:justify-start"
-							id="refreshBtn"
-							aria-label="Refresh"
-							title="Refresh"
-							onClick={fetchTweets}
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24"
-								viewBox="0 -960 960 960"
-								class="group-hover:ml-3"
-								width="24"
-							>
-								<path d="M480-160q-133 0-226.5-93.5T160-480q0-133 93.5-226.5T480-800q85 0 149 34.5T740-671v-99q0-13 8.5-21.5T770-800q13 0 21.5 8.5T800-770v194q0 13-8.5 21.5T770-546H576q-13 0-21.5-8.5T546-576q0-13 8.5-21.5T576-606h138q-38-60-97-97t-137-37q-109 0-184.5 75.5T220-480q0 109 75.5 184.5T480-220q75 0 140-39.5T717-366q5-11 16.5-16.5t22.5-.5q12 5 16 16.5t-1 23.5q-39 84-117.5 133.5T480-160Z" />
-							</svg>
-						</button>
-						<span class="cursor-pointer translate-y-[4px] absolute left-12 opacity-0 group-hover:opacity-100">
-							Refresh
-						</span>
-					</div>
-					<div class="group w-full flex items-center relative">
-						<button
-							onClick={() =>
-								clearTweets(
-									activeTab == "History"
-										? ["tweets"]
-										: ["bookmarkedTweets"]
-								)
-							}
-							class="bg-white transition-all h-12 w-12 mt-2 bg-red shadow rounded-full flex justify-center items-center overflow-hidden group-hover:w-full group-hover:justify-start"
-							id="clearBtn"
-							title="Clear"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24"
-								viewBox="0 -960 960 960"
-								width="24"
-								class="group-hover:ml-3"
-							>
-								<path
-									fill="rgb(239, 68, 68)"
-									d="M600-230v-60h145v60H600Zm0-368v-60h280v60H600Zm0 184v-60h235v60H600ZM125-675H80v-60h170v-45h135v45h170v60h-45v415q0 24-18 42t-42 18H185q-24 0-42-18t-18-42v-415Zm60 0v415h265v-415H185Zm0 0v415-415Z"
-								/>
-							</svg>
-						</button>
-						<span class="text-red-500 cursor-pointer translate-y-[4px] absolute left-12 opacity-0 group-hover:opacity-100">
-							Clear
-						</span>
-					</div>
-				</div>
 			</div>
 		</div>
 	);
