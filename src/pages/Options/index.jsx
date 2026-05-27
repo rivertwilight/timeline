@@ -1,5 +1,6 @@
 import { h, Component, render } from "preact";
 import { useState, useEffect, useRef } from "preact/hooks";
+import { motion, AnimatePresence } from "motion/react";
 import Footer from "../../components/Footer";
 import EmptyHint from "../../components/EmptyHint";
 
@@ -10,15 +11,15 @@ function Tweet({ tweet }) {
 				tweet.engaged
 					? "border-blue-400 border-2 group is-engaged"
 					: "border border-gray-200"
-			} mb-4 rounded-xl relative group/item flex overflow-hidden break-inside-avoid ${
+			} mb-4 rounded-xl relative group/item overflow-hidden break-inside-avoid ${
 				tweet.bookmarked ? "is-bookmarked" : ""
 			}`}
 		>
-			<span className="bg-blue-400 hidden group-[.is-engaged]:block h-5 text-white px-2 absolute rounded-tl-sm rounded-b-none right-0 bottom-0">
+			<span className="bg-blue-400 hidden group-[.is-engaged]:block h-5 text-white text-xs leading-5 px-2 absolute rounded-bl-sm rounded-t-none right-0 top-0">
 				Engaged
 			</span>
-			<a target="_blank" class="w-full" href={tweet.tweetUrl}>
-				<div class="bg-white hover:bg-gray-100 cursor-pointer p-4 transition-all group-hover/item:translate-x-[-80px]">
+			<a target="_blank" class="block" href={tweet.tweetUrl}>
+				<div class="bg-white hover:bg-gray-50 cursor-pointer p-4">
 					<div class="flex justify-between">
 						<span class="name">{tweet.userName}</span>
 						<span class="text-gray-500">
@@ -39,55 +40,46 @@ function Tweet({ tweet }) {
 					</div>
 				</div>
 			</a>
-			<div class="cursor-pointer transition-all w-[80px] flex justify-center items-center absolute top-0 bottom-0 right-[-80px] group-hover/item:right-0">
+			<div class="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover/item:opacity-100 transition-opacity duration-200 pointer-events-none group-hover/item:pointer-events-auto">
 				<button
-					onclick={() => toggleBookmark(tweet.tweetUrl)}
-					class="h-full flex-1 flex flex-col justify-center bg-yellow-400 hover:bg-yellow-500"
+					onClick={() => toggleBookmark(tweet.tweetUrl)}
+					title={tweet.bookmarked ? "Remove bookmark" : "Bookmark"}
+					aria-label={
+						tweet.bookmarked ? "Remove bookmark" : "Bookmark"
+					}
+					class="h-8 w-8 flex items-center justify-center rounded-full bg-yellow-400 hover:bg-yellow-500 shadow"
 				>
-					<div className="flex justify-center w-full">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="24"
-							viewBox="0 -960 960 960"
-							width="24"
-							class={`${tweet.bookmarked ? "hidden" : "block"}`}
-						>
-							<path d="M480-240 200-120v-725h350v60H260v574l220-93 220 93v-334h60v425L480-240ZM260-785h290-290Zm440 180v-90h-90v-60h90v-90h60v90h90v60h-90v90h-60Z" />
-						</svg>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class={`${tweet.bookmarked ? "block" : "hidden"}`}
-							height="24"
-							viewBox="0 -960 960 960"
-							width="24"
-						>
-							<path
-								fill="#ffffff"
-								d="M850-695H610v-60h240v60ZM480-240 200-120v-725h350v60H260v574l220-93 220 93v-334h60v425L480-240ZM260-785h290-290Z"
-							/>
-						</svg>
-					</div>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						height="16"
+						width="16"
+						viewBox="0 -960 960 960"
+						fill="white"
+					>
+						<path
+							d={
+								tweet.bookmarked
+									? "M200-120v-680h560v680L480-280 200-120Z"
+									: "M200-120v-680h560v680L480-280 200-120Zm60-91 220-93 220 93v-529H260v529Z"
+							}
+						/>
+					</svg>
 				</button>
 				<button
-					onclick={() =>
-						deleteTweet(tweet.tweetUrl)
-					}
-					class="h-full flex-1 flex flex-col justify-center bg-red-400 hover:bg-red-500"
+					onClick={() => deleteTweet(tweet.tweetUrl)}
+					title="Delete"
+					aria-label="Delete"
+					class="h-8 w-8 flex items-center justify-center rounded-full bg-red-400 hover:bg-red-500 shadow"
 				>
-					<div className="flex justify-center w-full">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="24"
-							viewBox="0 -960 960 960"
-							width="24"
-							class="group-hover:ml-3"
-						>
-							<path
-								fill="#ffffff"
-								d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-11q-12.75 0-21.375-8.675-8.625-8.676-8.625-21.5 0-12.825 8.625-21.325T190-810h158q0-13 8.625-21.5T378-840h204q12.75 0 21.375 8.625T612-810h158q12.75 0 21.375 8.675 8.625 8.676 8.625 21.5 0 12.825-8.625 21.325T770-750h-11v570q0 24.75-17.625 42.375T699-120H261Zm438-630H261v570h438v-570Zm-438 0v570-570Zm219 330 96 97q10 10 24 10.5t24-10q10-10.5 10-24T624-370l-96-98 96-98q10-10 10-23.5T624-613q-10-10-24-10t-24 10l-96 97-95-97q-10-10-24-10t-24 10q-10 10-10 24t10 24l96 97-96 97q-10 10-10 24t10 24q10 10 24 10t24-10l95-97Z"
-							/>
-						</svg>
-					</div>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						height="16"
+						width="16"
+						viewBox="0 -960 960 960"
+						fill="white"
+					>
+						<path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360Z" />
+					</svg>
 				</button>
 			</div>
 		</div>
@@ -341,21 +333,38 @@ function App() {
 		<div class="relative min-w-[800px] max-w-[1000px] mx-auto">
 			<CornerLogo />
 			<div class="relative flex">
-				<main class="flex-1 px-4 pt-14 rounded min-w-[700px] overflow-hidden w-full">
-					<nav class="flex items-center gap-2 mb-4">
-						{["History", "Favorite"].map((tab) => (
-							<button
-								key={tab}
-								onClick={() => setActiveTab(tab)}
-								class={`text-sm font-medium cursor-pointer rounded-full px-4 py-1.5 transition-colors ${
-									activeTab == tab
-										? "bg-black text-white hover:bg-gray-800"
-										: "bg-gray-100 text-gray-700 hover:bg-gray-200"
-								}`}
-							>
-								{tab}
-							</button>
-						))}
+				<main class="flex-1 px-4 pt-14 rounded min-w-[700px] w-full">
+					<nav class="sticky top-0 z-20 -mx-4 px-4 py-3 mb-4 flex items-center gap-2 bg-gray-100/80 backdrop-blur">
+						<div class="relative flex gap-1">
+							{["History", "Favorite"].map((tab) => (
+								<button
+									key={tab}
+									onClick={() => setActiveTab(tab)}
+									class="relative text-sm font-medium cursor-pointer rounded-full px-4 py-1.5"
+								>
+									{activeTab == tab && (
+										<motion.span
+											layoutId="tab-pill"
+											className="absolute inset-0 bg-black rounded-full"
+											transition={{
+												type: "spring",
+												stiffness: 380,
+												damping: 30,
+											}}
+										/>
+									)}
+									<span
+										class={`relative transition-colors duration-200 ${
+											activeTab == tab
+												? "text-white"
+												: "text-gray-700 hover:text-gray-900"
+										}`}
+									>
+										{tab}
+									</span>
+								</button>
+							))}
+						</div>
 						<div class="flex-1" />
 						<div class="relative flex items-center">
 							<svg
@@ -457,34 +466,55 @@ function App() {
 					</nav>
 					{searchTerm.length == 0 && (
 						<section>
-							{activeTab == "Favorite" ? (
-								<div class="columns-2 gap-4 pt-4">
-									{bookmarkedPost.map((t) => {
-										return <Tweet tweet={t} />;
-									})}
-								</div>
-							) : (
-								<div class="columns-2 gap-4 pt-4">
-									{tweet
-										.filter((t) => {
-											return (
-												(t.bookmarked &&
-													activeTab == "Favorite") ||
-												activeTab != "Favorite"
-											);
-										})
-										.map((t) => {
-											return <Tweet tweet={t} />;
-										})}
-								</div>
-							)}
-							{!!!tweet.length && activeTab == "History" && (
-								<EmptyHint key="history" />
-							)}
-							{!!!bookmarkedPost.length &&
-								activeTab == "Favorite" && (
-									<EmptyHint key="bookmakred" />
-								)}
+							<AnimatePresence mode="wait">
+								<motion.div
+									key={activeTab}
+									initial={{
+										opacity: 0,
+										filter: "blur(8px)",
+									}}
+									animate={{
+										opacity: 1,
+										filter: "blur(0px)",
+									}}
+									exit={{
+										opacity: 0,
+										filter: "blur(8px)",
+									}}
+									transition={{ duration: 0.18 }}
+								>
+									{activeTab == "Favorite" ? (
+										<div class="columns-2 gap-4 pt-4">
+											{bookmarkedPost.map((t) => {
+												return <Tweet tweet={t} />;
+											})}
+										</div>
+									) : (
+										<div class="columns-2 gap-4 pt-4">
+											{tweet
+												.filter((t) => {
+													return (
+														(t.bookmarked &&
+															activeTab ==
+																"Favorite") ||
+														activeTab != "Favorite"
+													);
+												})
+												.map((t) => {
+													return <Tweet tweet={t} />;
+												})}
+										</div>
+									)}
+									{!!!tweet.length &&
+										activeTab == "History" && (
+											<EmptyHint key="history" />
+										)}
+									{!!!bookmarkedPost.length &&
+										activeTab == "Favorite" && (
+											<EmptyHint key="bookmakred" />
+										)}
+								</motion.div>
+							</AnimatePresence>
 							<Footer />
 						</section>
 					)}

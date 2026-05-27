@@ -3,6 +3,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import { babel } from "@rollup/plugin-babel";
 import alias from "@rollup/plugin-alias";
+import replace from "@rollup/plugin-replace";
 
 const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
@@ -20,6 +21,12 @@ const plugins = [
 				replacement: "preact/jsx-runtime",
 			},
 		],
+	}),
+	replace({
+		preventAssignment: true,
+		values: {
+			"process.env.NODE_ENV": JSON.stringify("production"),
+		},
 	}),
 	nodeResolve({ extensions }),
 	commonjs(),
