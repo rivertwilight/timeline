@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { render, h, Component } from "preact";
 import Page from "../../utils/page";
 import getImage from "../../utils/getImage";

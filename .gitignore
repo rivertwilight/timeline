@@ -3,3 +3,4 @@ dist.pem
 .DS_Store
 dist.zip
 dist.crx
+.rollup.cache

@@ -11294,6 +11294,276 @@ const featureBundle = {
 
 const motion = /*@__PURE__*/ createMotionProxy(featureBundle, createDomVisualElement);
 
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const mergeClasses = (...classes) => classes.filter((className, index, array) => {
+  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
+}).join(" ").trim();
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const toCamelCase = (string) => string.replace(
+  /^([A-Z])|[\s-_]+(\w)/g,
+  (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
+);
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const toPascalCase = (string) => {
+  const camelCase = toCamelCase(string);
+  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+};
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+var defaultAttributes = {
+  xmlns: "http://www.w3.org/2000/svg",
+  width: 24,
+  height: 24,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  "stroke-width": "2",
+  "stroke-linecap": "round",
+  "stroke-linejoin": "round"
+};
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const LucideContext = X$1({
+  size: 24,
+  color: "currentColor",
+  strokeWidth: 2,
+  absoluteStrokeWidth: false,
+  class: ""
+});
+const useLucideContext = () => x(LucideContext);
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const hasA11yProp = (props) => {
+  for (const prop in props) {
+    if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const Icon = ({
+  color,
+  size,
+  strokeWidth,
+  absoluteStrokeWidth,
+  children,
+  iconNode,
+  class: classes = "",
+  ...rest
+}) => {
+  const {
+    size: contextSize = 24,
+    strokeWidth: contextStrokeWidth = 2,
+    absoluteStrokeWidth: contextAbsoluteStrokeWidth = false,
+    color: contextColor = "currentColor",
+    class: contextClass = ""
+  } = useLucideContext() ?? {};
+  const calculatedStrokeWidth = absoluteStrokeWidth ?? contextAbsoluteStrokeWidth ? Number(strokeWidth ?? contextStrokeWidth) * 24 / Number(size ?? contextSize) : strokeWidth ?? contextStrokeWidth;
+  return k$1(
+    "svg",
+    {
+      ...defaultAttributes,
+      width: size ?? contextSize ?? 24,
+      height: size ?? contextSize ?? 24,
+      stroke: color ?? contextColor,
+      ["stroke-width"]: calculatedStrokeWidth,
+      class: mergeClasses("lucide", contextClass, classes),
+      ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
+      ...rest
+    },
+    [...iconNode.map(([tag, attrs]) => k$1(tag, attrs)), ...F$1(children)]
+  );
+};
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const createLucideIcon = (iconName, iconNode) => {
+  const Component = ({ class: classes = "", className = "", children, ...props }) => k$1(
+    Icon,
+    {
+      ...props,
+      iconNode,
+      class: mergeClasses(
+        `lucide-${toKebabCase(toPascalCase(iconName))}`,
+        `lucide-${toKebabCase(iconName)}`,
+        classes,
+        className
+      )
+    },
+    children
+  );
+  Component.displayName = toPascalCase(iconName);
+  return Component;
+};
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const Bookmark = createLucideIcon("bookmark", [
+  [
+    "path",
+    {
+      d: "M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z",
+      key: "oz39mx"
+    }
+  ]
+]);
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const Download = createLucideIcon("download", [
+  ["path", { d: "M12 15V3", key: "m9g1x1" }],
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
+]);
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const EllipsisVertical = createLucideIcon("ellipsis-vertical", [
+  ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
+  ["circle", { cx: "12", cy: "5", r: "1", key: "gxeob9" }],
+  ["circle", { cx: "12", cy: "19", r: "1", key: "lyex9k" }]
+]);
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const ExternalLink = createLucideIcon("external-link", [
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+]);
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const RefreshCw = createLucideIcon("refresh-cw", [
+  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
+  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
+  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
+  ["path", { d: "M8 16H3v5", key: "1cv678" }]
+]);
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const Search = createLucideIcon("search", [
+  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
+]);
+
+/**
+ * @license lucide-preact v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const Trash2 = createLucideIcon("trash-2", [
+  ["path", { d: "M10 11v6", key: "nco0om" }],
+  ["path", { d: "M14 11v6", key: "outv1u" }],
+  ["path", { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6", key: "miytrc" }],
+  ["path", { d: "M3 6h18", key: "d0wm0j" }],
+  ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2", key: "e791ji" }]
+]);
+
 const Footer = () => k$1(S, null, k$1("div", {
   className: "mt-8 mb-4 flex flex-col justify-center items-center"
 }, k$1("span", {
@@ -11312,6 +11582,7 @@ const EmptyHint = () => k$1("div", {
   class: "text-gray-700 w-full text-base text-center"
 }, "Take a look at x.com and check back later"));
 
+// @ts-nocheck
 function Tweet({
   tweet
 }) {
@@ -11344,29 +11615,20 @@ function Tweet({
     onClick: () => toggleBookmark(tweet.tweetUrl),
     title: tweet.bookmarked ? "Remove bookmark" : "Bookmark",
     "aria-label": tweet.bookmarked ? "Remove bookmark" : "Bookmark",
-    class: "h-8 w-8 flex items-center justify-center rounded-full bg-yellow-400 hover:bg-yellow-500 shadow"
-  }, k$1("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    height: "16",
-    width: "16",
-    viewBox: "0 -960 960 960",
-    fill: "white"
-  }, k$1("path", {
-    d: tweet.bookmarked ? "M200-120v-680h560v680L480-280 200-120Z" : "M200-120v-680h560v680L480-280 200-120Zm60-91 220-93 220 93v-529H260v529Z"
-  }))), k$1("button", {
+    class: "h-8 w-8 flex items-center justify-center rounded-full bg-yellow-400 hover:bg-yellow-500 shadow text-white"
+  }, k$1(Bookmark, {
+    size: 16,
+    strokeWidth: 2,
+    fill: tweet.bookmarked ? "currentColor" : "none"
+  })), k$1("button", {
     onClick: () => deleteTweet(tweet.tweetUrl),
     title: "Delete",
     "aria-label": "Delete",
-    class: "h-8 w-8 flex items-center justify-center rounded-full bg-red-400 hover:bg-red-500 shadow"
-  }, k$1("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    height: "16",
-    width: "16",
-    viewBox: "0 -960 960 960",
-    fill: "white"
-  }, k$1("path", {
-    d: "M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360Z"
-  })))));
+    class: "h-8 w-8 flex items-center justify-center rounded-full bg-red-400 hover:bg-red-500 shadow text-white"
+  }, k$1(Trash2, {
+    size: 16,
+    strokeWidth: 2
+  }))));
 }
 function toggleBookmark(tweetUrl) {
   return new Promise((resolve, reject) => {
@@ -11496,7 +11758,8 @@ function CornerLogo() {
   }, k$1("img", {
     height: "20",
     width: "20",
-    src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAQAAAD/5HvMAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfnCAEEAgfkAvLDAAAF6klEQVRo3u2Za2wUVRTHf7vtstutCN0CLUJTeaiASKUQCDSUkogaBDQl+IVEwSqh+NZqkPBBQHkEDcRPBqQEEhoSEx5CyiMKaFQKCGik4VGQh33QBy3Qx7Zsd68fvF1mZmd2Z3YX+LL/+2Vm7p0z/3vm3HPuPQcSSCCBBB4ubHGS4iAZO4JufAQeFiEbfRjCSAaRRQa9cRCgg5tUU0sVF6mn+8ER6ksu+RQwgnSSQ3oFrVyjgsNUcD02jZnBQOZziFsEEBFaF2dZSY4O5bhpqA+zWcxYnMEnflppxks7Puy4SeFR0hT9AWooYzOXEPEmZCeXpbxIirz3cpXjHKOSOjrpwo+NXjhJ4wnGk8co0qT8AOf4iu9pj+ePSuEt/gn+jCZ2MIdsHIYT9ZDHKs7TLd9oYyPZ8aPjYR2tUvQdtpGP25ROh7OES9LaAhxhfHzoZFLKXSm0gjmmyNwjlUMp7XIyf1EQO53+bMGPQOBlE8OikJDKIq5JSpVMiY3OI3wj7eAWy+gdpRQbz/OnpHSKMdHTSeIjvAgELbxPr5imNpE/JKVyBkYrZDo1co18ariizGMylQgE3ayJbnKZHJECNgS9T2yYxQ0EgmZmWX/ZxlJpPQfJjAsdSOITuhAIjliXOYILCAS1TDMxOoPXyMUecVw6exEI7vK2NTp2vpQmuIakCGMdvMCPdHGZEtIjSi6gHoHgBIOsEBrKOQSC84yMMHIIX9MQjO/7eS5CdHeyUeqoyAqhIumbV4Qd5WYeJ6Xb7Gk3WMPjYd+aJE17N6lm6aSyRwqfaDjGxrNsCUY4ZfNTwathAoybXQgE9UwwS2g0/yIQ7DQUm867VIXZnN1hE88Ybm/ekPovMUtoLp0I/CzW7XVQwD65fI1bgAsU49GV8JTcymw3625Xy3ChFwizWCltIHLr5AfydIw8lQMIBGfMeSMXu2VkHhzSU0hFcNNlrtWyXCd2rUcgaGCcGUIDOCWDoNaChvG3wWe9NNOqWW/39LQg5BuLCCDo5BX1Y32P0Zs0AGro1PRcZTd26pim8sld7GEHN3AzhTc17u4CNSRxOOQb1XThwkGGGQ3lSBtZpdPXn+EsVh2BfKylj+y18xLXVdrZTzZP6qy2ybQgECwx1pCbAdgBP0PkMcZFtgwbzdySoxppZLpKxnE2cFteByjnOz5XELDRSIfOxDrxAWh3EUpCT/MtHgKAk0cBeJ2XARs+llNmqM+D1CnuBOW8Q38zP0IPSkJn+YkPVH7BgwcQlHHIUIKgXvOkmTYThFzySxorVZqml9WU6Zwv97GEJkPBtpDTVmbQosLBgwsI0GxMCFpYxgHNiz9TQnVY0TMYqrhLptDAO6sxGCfgC9FvCEZzUrFGTjNWZ0yxapUFKA06PicLaFKtsgMG0dCCYyzgkhR2kXzdEcWazIePX/mQGcxjm1zMkQhZDB1zaUBQzUyD/mKdVIyfDhnBzRAyDK76nnoX6RSxnnIz7CXsls4leTJKnpHeKAKhbjazk5uGua9YM5NuZuEAGvhF22W0+/XREEagldyhX8eR5DAJgGNUarsiH1v0UEWL6bGVIQHayXwyAB9745XCSmEdHSZ2QgF+0zmzTA0egwaHiraQjlTAywpOMiHC+VxwjT1c1jz18DEDAB9bIzjcBwI7JXIvfjRux/OYMJO66JMNSmQxDVfMdHrSMX7WKhLHltGPhRyngfdiTlj1RMkYElYARbTxf0pvaQwpvenBlN5pcmKaGBlsDSY9N6q2GmaRykKu0pP0zI9CggaZbFGkhQstpoXHsDm+aWFQJ85vs5UppkKpnWH3J3EOkMJCrgR9cCM7KCQrTGkhjUms4pyitLDJTGnBWvFlHJ+pii9XOMExKqmlHT9+bCTTi36y+DISj/Xii9WNRF9mU0yuwgH4aaWJNu7iw44TFx5VeUpQw3ZKqcJUeSoaPMYCDnHbZAHvC8bezwLePU2NI5+pEUqcR/ndaokz9iLwKLLJVBWBa6nj/IMuAmulxK1MnkACCSTwsPEfF/n4ctIyymwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMDgtMDFUMDQ6MDI6MDQrMDA6MDCiLtkeAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTA4LTAxVDA0OjAyOjA0KzAwOjAw03NhogAAABJ0RVh0ZXhpZjpFeGlmT2Zmc2V0ADI2UxuiZQAAABl0RVh0ZXhpZjpQaXhlbFhEaW1lbnNpb24AMTAyNPLFVh8AAAAZdEVYdGV4aWY6UGl4ZWxZRGltZW5zaW9uADEwMjRLPo33AAAAIHRFWHRzb2Z0d2FyZQBodHRwczovL2ltYWdlbWFnaWNrLm9yZ7zPHZ0AAAAYdEVYdFRodW1iOjpEb2N1bWVudDo6UGFnZXMAMaf/uy8AAAAYdEVYdFRodW1iOjpJbWFnZTo6SGVpZ2h0ADE5MkBdcVUAAAAXdEVYdFRodW1iOjpJbWFnZTo6V2lkdGgAMTky06whCAAAABl0RVh0VGh1bWI6Ok1pbWV0eXBlAGltYWdlL3BuZz+yVk4AAAAXdEVYdFRodW1iOjpNVGltZQAxNjkwODYyNTI058q/fgAAAA90RVh0VGh1bWI6OlNpemUAMEJClKI+7AAAAFZ0RVh0VGh1bWI6OlVSSQBmaWxlOi8vL21udGxvZy9mYXZpY29ucy8yMDIzLTA4LTAxLzQ1NzYyZDZkY2Q2YmM2ZmE2MWMzNTYwOTNkZDNkNjA1Lmljby5wbmdCGETuAAAAAElFTkSuQmCC"
+    src: "./icon/icon-48.png",
+    alt: "Timeline"
   }));
 }
 function App() {
@@ -11527,12 +11790,10 @@ function App() {
       setBookmarkedPost(fetchedBookmarkedTweets);
     });
   };
-
   // Handle search term changes
   const handleSearchChange = e => {
     setSearchTerm(e.target.value);
   };
-
   // Search for tweets when search term changes
   y(() => {
     if (searchTerm) {
@@ -11588,16 +11849,10 @@ function App() {
     class: "flex-1"
   }), k$1("div", {
     class: "relative flex items-center"
-  }, k$1("svg", {
-    class: "absolute left-3 pointer-events-none text-gray-400",
-    xmlns: "http://www.w3.org/2000/svg",
-    height: "16",
-    width: "16",
-    viewBox: "0 -960 960 960",
-    fill: "currentColor"
-  }, k$1("path", {
-    d: "M796-121 533-384q-30 26-69.959 40.5T378-329q-108.162 0-183.081-75Q120-479 120-585t75-181q75-75 181.5-75t181 75Q632-691 632-584.85 632-542 618-502q-14 40-42 75l264 262-44 44ZM377-389q81.25 0 138.125-57.5T572-585q0-81-56.875-138.5T377-781q-82.083 0-139.542 57.5Q180-666 180-585t57.458 138.5Q294.917-389 377-389Z"
-  })), k$1("input", {
+  }, k$1(Search, {
+    size: 16,
+    class: "absolute left-3 pointer-events-none text-gray-400"
+  }), k$1("input", {
     id: "searchInput",
     type: "text",
     value: searchTerm,
@@ -11609,15 +11864,10 @@ function App() {
     title: "Refresh",
     "aria-label": "Refresh",
     class: "h-9 w-9 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 hover:text-black transition-colors cursor-pointer"
-  }, k$1("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    height: "20",
-    width: "20",
-    viewBox: "0 -960 960 960",
-    fill: "currentColor"
-  }, k$1("path", {
-    d: "M480-160q-133 0-226.5-93.5T160-480q0-133 93.5-226.5T480-800q85 0 149 34.5T740-671v-99q0-13 8.5-21.5T770-800q13 0 21.5 8.5T800-770v194q0 13-8.5 21.5T770-546H576q-13 0-21.5-8.5T546-576q0-13 8.5-21.5T576-606h138q-38-60-97-97t-137-37q-109 0-184.5 75.5T220-480q0 109 75.5 184.5T480-220q75 0 140-39.5T717-366q5-11 16.5-16.5t22.5-.5q12 5 16 16.5t-1 23.5q-39 84-117.5 133.5T480-160Z"
-  }))), k$1("div", {
+  }, k$1(RefreshCw, {
+    size: 18,
+    strokeWidth: 2
+  })), k$1("div", {
     class: "relative",
     ref: menuRef
   }, k$1("button", {
@@ -11625,35 +11875,38 @@ function App() {
     title: "More",
     "aria-label": "More",
     class: "h-9 w-9 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 hover:text-black transition-colors cursor-pointer"
-  }, k$1("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    height: "20",
-    width: "20",
-    viewBox: "0 -960 960 960",
-    fill: "currentColor"
-  }, k$1("path", {
-    d: "M480-200q-33 0-56.5-23.5T400-280q0-33 23.5-56.5T480-360q33 0 56.5 23.5T560-280q0 33-23.5 56.5T480-200Zm0-200q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-200q-33 0-56.5-23.5T400-680q0-33 23.5-56.5T480-760q33 0 56.5 23.5T560-680q0 33-23.5 56.5T480-600Z"
-  }))), menuOpen && k$1("div", {
+  }, k$1(EllipsisVertical, {
+    size: 20,
+    strokeWidth: 2
+  })), menuOpen && k$1("div", {
     class: "absolute right-0 mt-1 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-30 py-1"
   }, k$1("a", {
     onClick: () => {
       exportTweets(tweet);
       setMenuOpen(false);
     },
-    class: "block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-  }, "Export"), k$1("a", {
+    class: "flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+  }, k$1("span", null, "Export"), k$1(Download, {
+    size: 14,
+    class: "text-gray-400"
+  })), k$1("a", {
     href: "https://github.com/RiverTwilight/Timeline",
     target: "_blank",
     rel: "noreferrer",
     onClick: () => setMenuOpen(false),
-    class: "block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-  }, "GitHub"), k$1("a", {
+    class: "flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+  }, k$1("span", null, "GitHub"), k$1(ExternalLink, {
+    size: 14,
+    class: "text-gray-400"
+  })), k$1("a", {
     onClick: () => {
       clearTweets(activeTab == "History" ? ["tweets"] : ["bookmarkedTweets"]);
       setMenuOpen(false);
     },
-    class: "block px-3 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
-  }, "Clear ", activeTab), k$1("div", {
+    class: "flex items-center justify-between px-3 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
+  }, k$1("span", null, "Clear ", activeTab), k$1(Trash2, {
+    size: 14
+  })), k$1("div", {
     class: "border-t border-gray-200 my-1"
   }), k$1("p", {
     class: "px-3 py-2 text-xs text-gray-500 leading-relaxed"
@@ -11706,6 +11959,5 @@ function App() {
     style: "display: none"
   }))));
 }
-
 // Render the App into the DOM
 R(k$1(App, null), document.body);

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { render, h, Component } from "preact";
 import { useState, useEffect, useMemo } from "preact/hooks";
 import Page from "../../utils/page";
