@@ -1,45 +1,45 @@
 import fs from "fs";
 
 const rawConfig = {
-  name: "Timeline - Your X (Twitter) History",
-  manifest_version: 3,
-  version: "1.4",
-  icons: {
-    16: "./icon/android-icon-36x36.png",
-    48: "./icon/android-icon-48x48.png",
-    96: "./icon/android-icon-96x96.png",
-    128: "./icon/icon-128.png",
-  },
-  options_page: "options.html",
-  permissions: ["storage"],
-  content_scripts: [
-    {
-      matches: ["*://*.twitter.com/*"],
-      all_frames: true,
-      js: ["content.bundle.cjs.js"],
-    },
-  ],
-  background: {
-    service_worker: "background.js",
-  },
-  web_accessible_resources: [
-    {
-      resources: ["icon/ygeeker.png"],
-      matches: ["<all_urls>"],
-    },
-  ],
-  action: {
-    default_icon: {
-      16: "./icon/android-icon-36x36.png",
-      48: "./icon/android-icon-48x48.png",
-    },
-  },
+	name: "Timeline - Your X (Twitter) History",
+	manifest_version: 3,
+	version: "1.5",
+	icons: {
+		16: "./icon/icon-16.png",
+		48: "./icon/icon-48.png",
+		96: "./icon/icon-96.png",
+		128: "./icon/icon-128.png",
+	},
+	options_page: "options.html",
+	permissions: ["storage"],
+	content_scripts: [
+		{
+			matches: ["*://*.twitter.com/*", "*://*.x.com/*"],
+			all_frames: true,
+			js: ["content.bundle.cjs.js"],
+		},
+	],
+	background: {
+		service_worker: "background.js",
+	},
+	web_accessible_resources: [
+		{
+			resources: ["icon/ygeeker.png"],
+			matches: ["<all_urls>"],
+		},
+	],
+	action: {
+		default_icon: {
+			16: "./icon/icon-16.png",
+			48: "./icon/icon-48.png",
+		},
+	},
 };
 
 const MATCHES = ["*://*.twitter.com/*", "*://*.x.com/*"];
 
 rawConfig["content_scripts"].forEach((script) => {
-  script.matches = MATCHES;
+	script.matches = MATCHES;
 });
 
 // rawConfig["web_accessible_resources"].forEach((script) => {
