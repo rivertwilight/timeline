@@ -1,7 +1,7 @@
 <div align="center">
 
-<a href="https://www.ygktool.com">
-  <img width="180" src="./dist/icon/android-icon-192x192.png">
+<a href="https://rene.wang">
+  <img width="180" src="./dist/icon/icon-128.png">
 </a>
 
 <h1 align="center">Timeline</h1>
@@ -12,36 +12,34 @@
 
 This browser extension can automatically save the posts you meet in the timeline (Up to 100 tweets).
 
-这个浏览器插件可以帮你自动记录 X 时间线中出现的推文，并允许你搜索、收藏或者删除它们，还能用来导出书签。
-
 https://github.com/RiverTwilight/Timeline/assets/52880665/57179574-3c24-48ea-b21d-44cdf3ce444a
 
 ## Features
 
-- [x] Save posts you see in timeline (auto mark engaged post)
-- [x] Preview the text and image
-- [x] Export data to JSON
-- [x] Can be used to export X bookmark
-- [x] Full open-source, no privacy worry
+-   [x] Save posts you see in timeline (auto mark engaged post)
+-   [x] Preview the text and image
+-   [x] Export data to JSON
+-   [x] Can be used to export X bookmark
+-   [x] Full open-source, no privacy worry
 
 ## Get Timeline
 
-* [Chrome Web Store](https://chrome.google.com/webstore/detail/timeline-x-history/fdmmhjkfeembndibfcpiaohjhlnafnpd?hl=en-US)
-* Firefox Add-ons (Working)
-* Edge Add-ons (Working)
+-   [Chrome Web Store](https://chrome.google.com/webstore/detail/timeline-x-history/fdmmhjkfeembndibfcpiaohjhlnafnpd?hl=en-US)
+-   Firefox Add-ons (Working)
+-   Edge Add-ons (Working)
 
 ## Contribution
 
 Install the dependencies
 
 ```
-yarn install
+pnpm install
 ```
 
 Run the dev mode to build the extension. The files of unpacked extension are in `dist` folder.
 
 ```
-yarn run dev
+pnpm run dev
 ```
 
 Enable the `dev mode` in the extension setting page. Then you can load the unpacked extension from `dist`.
@@ -52,5 +50,4 @@ Enable the `dev mode` in the extension setting page. Then you can load the unpac
 ◊
 CC-BY-4.0
 
-Copyright © 2023 Rivertwilight 
-
+Copyright © 2023 Rivertwilight
